@@ -5,9 +5,9 @@ function price($S, $E, $inf) {
   $s = $N * max($S) - array_sum($S);
   $e = $N * max($E) - array_sum($E);
   $synctime = (10*$s+$e);
-  # return $synctime + @$I['*'] + @$I['-'] + @$I['a'];
-  $revoir = @$I['*'] * 3;
-  $archive = @$I['a'] + @$I['-'];
+  # return $synctime + @$I['completed'] + @$I['unlisted'] + @$I['archived'];
+  $revoir = @$I['completed'] * 3;
+  $archive = @$I['archived'] + @$I['unlisted'] / 3. + $N-@$I['doing'];
   $tropneuf = (1-tanh((10*max($S)+max($E))/10))*4;
   return $synctime*0.1 + $tropneuf + $revoir + $archive;
 }
@@ -215,11 +215,11 @@ function main($users) {
     foreach($users as $user) {
       if(!isset($S[$name][$user])) $S[$name][$user] = 0;
       if(!isset($E[$name][$user])) $E[$name][$user] = 0;
-      $inf="-";
+      $inf='unlisted';
       if(isset($complete[$name][$user])) {
-        $inf = " ";
-        if($archived[$name][$user]) $inf = "a";
-        if($complete[$name][$user]) $inf = "*";
+        $inf = 'doing';
+        if($archived[$name][$user]) $inf = 'archived';
+        if($complete[$name][$user]) $inf = 'completed';
       }
       $info[$name][$user] = $inf;
     }
@@ -233,10 +233,11 @@ function main($users) {
   sort($candidates);
   
   # print text only
+  $symbol=array('completed'=>'.', 'doing'=>' ', 'unlisted'=>'?', 'archived'=>'!');
   foreach($candidates as $c) {
     $n=$c[1];
     foreach($users as $u) {
-      printf("$u:S%02dE%02d%s ", $S[$n][$u], $E[$n][$u], $info[$n][$u]); }
+      printf("$u:S%02dE%02d%s ", $S[$n][$u], $E[$n][$u], $symbol[$info[$n][$u]]); }
     printf("(cost %.4f) %s", $c[0], $n);
     echo("\n");
   }
@@ -248,9 +249,8 @@ function main($users) {
   
   # print HTML
   if(1) {
-    $symbol=array('*'=>'.', ' '=>' ', '-'=>'?', 'a'=>'!');
-    $class=array('*'=>'done', ' '=>'doing', '-'=>'unlisted', 'a'=>'archived');
-    $infobulle=array('*'=>'terminée', ' '=>'en cours', '-'=>'non listée', 'a'=>'archivée');
+    $class=array('completed'=>'done', 'doing'=>'doing', 'unlisted'=>'unlisted', 'archived'=>'archived');
+    $infobulle=array('completed'=>'terminée', 'doing'=>'en cours', 'unlisted'=>'non listée', 'archived'=>'archivée');
     global $bs; 
     echo "<table><tr><th>series</th>";
     foreach($users as $u) {
