@@ -1,0 +1,6 @@
+cache
+*~
+CACHE*
+*.py
+*.sh
+test.php
