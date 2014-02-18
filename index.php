@@ -267,7 +267,9 @@ function main($users) {
         $num=sprintf("s%02de%02d", $S[$n][$u], $E[$n][$u]);
         $url="$bs/episode/$n/$num";
         $inf=$info[$n][$u];
-        printf("<td class='%s' title='série %s'><a href=\"$url\">$num</a>%s</td> ", $class[$inf], $infobulle[$inf], $symbol[$inf]);
+        $title="dernier épisode regardé par $u (série $infobulle[$inf])";
+        if($inf=='unlisted') $title="série non listée par $u";
+        printf("<td class='%s' title='$title'><a href='$url'>$num</a>%s</td> ", $class[$inf], $symbol[$inf]);
       }
       printf("<td>$cost</td>");
       printf("</tr>\n");
