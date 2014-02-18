@@ -250,7 +250,7 @@ function main($users) {
   # print HTML
   if(1) {
     $class=array('completed'=>'done', 'doing'=>'doing', 'unlisted'=>'unlisted', 'archived'=>'archived');
-    $infobulle=array('completed'=>'terminée', 'doing'=>'en cours', 'unlisted'=>'non listée', 'archived'=>'archivée');
+    $tip=array('completed'=>'terminée', 'doing'=>'en cours', 'unlisted'=>'non listée', 'archived'=>'archivée');
     global $bs; 
     echo "<table><tr><th>series</th>";
     foreach($users as $u) {
@@ -267,7 +267,7 @@ function main($users) {
         $num=sprintf("s%02de%02d", $S[$n][$u], $E[$n][$u]);
         $url="$bs/episode/$n/$num";
         $inf=$info[$n][$u];
-        $title="dernier épisode regardé par $u (série $infobulle[$inf])";
+        $title="dernier épisode regardé par $u (série $tip[$inf])";
         if($inf=='unlisted') $title="série non listée par $u";
         printf("<td class='%s' title='$title'><a href='$url'>$num</a>%s</td> ", $class[$inf], $symbol[$inf]);
       }
