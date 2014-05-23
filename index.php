@@ -105,7 +105,7 @@ function read_with_cache($user) {
   if(!$v) {
     htmllog("fetching $url... (force=$forcefetch)");
     $v = robust_file($url);
-    htmllog("fetching $url status:" . ((!$v)?"fais":"success"));
+    htmllog("fetching $url status:" . ((!$v)?"fail":"success"));
     if(!$v) return false;
     
     # caching
@@ -149,11 +149,11 @@ function series_of($user) {
   $list=array();
   $realname=array();
   foreach($series as $s) {
-    $name = G($s, '/<div class="show[ a-z]*" id="([^"]+)">/');
+    $name = G($s, '/<div class="show[ a-z]*" id="([^"]+)"/');
     $ep   = G($s, '/(S[0-9][0-9][0-9]*E[0-9][0-9][0-9]*)/');
     $real = G($s, '/>([^<]+)<\/a>/');
-    $iscomplete = !!G($s, '/completion.(green)/');
-    $archived = !!G($s, '/show.(archive)/');
+    $iscomplete = !!G($s, '/completion.(green)/'); if(!$iscomplete) $iscomplete=0;
+    $archived = !!G($s, '/show.(archive)/'); if(!$archived) $archived=0;
     #if(!$archived);htmllog("$real $archived");
     $list[ ] = array(
       $name,
@@ -162,9 +162,7 @@ function series_of($user) {
       $real,
       $iscomplete,
       $archived);
-    
   }
-  
   return $list;
 }
 
