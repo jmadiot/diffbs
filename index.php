@@ -106,7 +106,7 @@ function read_with_cache($user) {
     htmllog("fetching $url... (force=$forcefetch)");
     $v = robust_file($url);
     htmllog("fetching $url status:" . ((!$v)?"fais":"success"));
-    if(!v) return false;
+    if(!$v) return false;
     
     # caching
     if($v) {
